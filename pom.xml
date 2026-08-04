@@ -91,7 +91,15 @@
 		</dependency>
 
 
+		<!--validation-->
 
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+			<version>4.1.0</version>
+			<scope>compile</scope>
+		</dependency>
 
 
 

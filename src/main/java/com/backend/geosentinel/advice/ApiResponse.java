@@ -1,5 +1,6 @@
 package com.backend.geosentinel.advice;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;

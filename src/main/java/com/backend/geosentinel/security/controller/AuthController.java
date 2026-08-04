@@ -3,7 +3,7 @@ package com.backend.geosentinel.security.controller;
 
 
 import com.backend.geosentinel.security.dto.*;
-import com.backend.geosentinel.security.service.AuthService;
+import com.backend.geosentinel.security.service.AuthServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponseDto> signup(@RequestBody SignUpRequestDto signUpRequestDto) {
