@@ -41,6 +41,8 @@ public class AuthServiceImpl implements AuthService {
     private final JWTService jwtService;
     private final RefreshTokenRepository refreshTokenRepository;
 
+    @Override
+    @Transactional
     public SignUpResponseDto signUp(SignUpRequestDto signUpRequestDto) {
 
         User user = userRepository.findByEmail(signUpRequestDto.getEmail()).orElse(null);
@@ -58,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public String[] login(LoginDto loginDto) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -86,6 +89,7 @@ public class AuthServiceImpl implements AuthService {
         return new String[]{accessToken, refreshToken};
     }
     @Override
+    @Transactional
     public String refreshToken(String refreshToken) {
 
         RefreshToken token = refreshTokenRepository.findByToken(refreshToken)
