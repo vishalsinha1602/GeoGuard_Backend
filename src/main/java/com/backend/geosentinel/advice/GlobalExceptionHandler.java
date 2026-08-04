@@ -1,6 +1,7 @@
 package com.backend.geosentinel.advice;
 
-import com.project.hotelbooking.exception.ResourceNotFoundException;
+
+import com.backend.geosentinel.exception.ResourceNotFoundException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
