@@ -2,6 +2,7 @@ package com.backend.geosentinel.devices.entity;
 
 import com.backend.geosentinel.devices.entity.enums.DeviceStatus;
 import com.backend.geosentinel.devices.entity.enums.DeviceType;
+import com.backend.geosentinel.locations.entity.Location;
 import com.backend.geosentinel.security.entity.User;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;

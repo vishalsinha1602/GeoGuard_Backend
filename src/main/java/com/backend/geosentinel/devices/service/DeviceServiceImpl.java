@@ -3,6 +3,7 @@ package com.backend.geosentinel.devices.service;
 import com.backend.geosentinel.devices.dto.DeviceRequestDto;
 import com.backend.geosentinel.devices.dto.DeviceResponseDto;
 import com.backend.geosentinel.devices.entity.Device;
+import com.backend.geosentinel.devices.entity.enums.DeviceStatus;
 import com.backend.geosentinel.devices.repository.DeviceRepository;
 import com.backend.geosentinel.exception.ResourceNotFoundException;
 import com.backend.geosentinel.exception.UnAuthorisedException;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,8 +57,20 @@ public class DeviceServiceImpl implements DeviceService{
                 deviceRepository.findByOwnerAndActiveTrue(currentUser);
 
         return devices.stream()
-                .map(device ->
-                        modelMapper.map(device, DeviceResponseDto.class))
+
+                .map(device -> {
+
+                    DeviceResponseDto response =
+                            modelMapper.map(device, DeviceResponseDto.class);
+
+                    response.setStatus(
+                            calculateStatus(device)
+                    );
+
+                    return response;
+
+                })
+
                 .toList();
     }
 
@@ -74,7 +88,14 @@ public class DeviceServiceImpl implements DeviceService{
                                 "Device not found with id: " + publicId
                         ));
 
-        return modelMapper.map(device, DeviceResponseDto.class);
+        DeviceResponseDto response =
+                modelMapper.map(device, DeviceResponseDto.class);
+
+        response.setStatus(
+                calculateStatus(device)
+        );
+
+        return response;
 
     }
 
@@ -125,6 +146,22 @@ public class DeviceServiceImpl implements DeviceService{
         device.setActive(false);
 
         deviceRepository.save(device);
+    }
+
+
+    private DeviceStatus calculateStatus(Device device) {
+
+        if (device.getLastSeen() == null) {
+
+            return DeviceStatus.OFFLINE;
+
+        }
+
+        return device.getLastSeen()
+                .isAfter(LocalDateTime.now().minusSeconds(15))
+                ? DeviceStatus.ONLINE
+                : DeviceStatus.OFFLINE;
+
     }
 
 

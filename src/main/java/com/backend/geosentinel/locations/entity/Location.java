@@ -1,5 +1,7 @@
-package com.backend.geosentinel.devices.entity;
+package com.backend.geosentinel.locations.entity;
 
+
+import com.backend.geosentinel.devices.entity.Device;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

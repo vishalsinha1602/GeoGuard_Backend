@@ -42,8 +42,6 @@ public class AuthController {
         cookie.setMaxAge(7 * 24 * 60 * 60);
 
         httpServletResponse.addCookie(cookie);
-
-        httpServletResponse.addCookie(cookie);
         return ResponseEntity.ok(new LoginResponseDto(tokens[0]));
     }
 
