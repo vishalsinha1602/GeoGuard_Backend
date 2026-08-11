@@ -8,6 +8,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -32,17 +35,30 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginDto loginDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+    public ResponseEntity<LoginResponseDto> login(
+            @RequestBody LoginDto loginDto,
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse) {
+
         String[] tokens = authService.login(loginDto);
 
-        Cookie cookie = new Cookie("refreshToken", tokens[1]);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(false);          // true in production
-        cookie.setPath("/api/v1/auth");
-        cookie.setMaxAge(7 * 24 * 60 * 60);
+        ResponseCookie cookie = ResponseCookie
+                .from("refreshToken", tokens[1])
+                .httpOnly(true)
+                .secure(false)              // true in production HTTPS
+//                .sameSite("Lax")
+                .path("/")
+                .maxAge(Duration.ofDays(30))
+                .build();
 
-        httpServletResponse.addCookie(cookie);
-        return ResponseEntity.ok(new LoginResponseDto(tokens[0]));
+        httpServletResponse.addHeader(
+                HttpHeaders.SET_COOKIE,
+                cookie.toString()
+        );
+
+        return ResponseEntity.ok(
+                new LoginResponseDto(tokens[0])
+        );
     }
 
     @PostMapping("/logout")
